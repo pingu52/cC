@@ -1,68 +1,66 @@
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 
-int compare(const void *a, const void *b) {
-    int x = *(const int *)a;
-    int y = *(const int *)b;
-
-    if (x < y) return -1;
-    if (x > y) return 1;
-    return 0;
-}
-
-int main(void) {
+int main() {
     int n;
     scanf("%d", &n);
 
-    int *arr = (int *)malloc(sizeof(int) * n);
-    long long sum = 0;
+    int freq[8001] = {0};
+    int sum = 0;
+    int min = 4001;
+    int max = -4001;
 
     for (int i = 0; i < n; i++) {
-        scanf("%d", &arr[i]);
-        sum += arr[i];
-    }
+        int x;
+        scanf("%d", &x);
 
-    qsort(arr, n, sizeof(int), compare);
+        freq[x + 4000]++;
+        sum += x;
+
+        if (x < min)
+            min = x;
+        if (x > max)
+            max = x;
+    }
 
     // 1. 산술평균
     int avg = (int)round((double)sum / n);
 
     // 2. 중앙값
-    int mid = arr[n / 2];
+    int count = 0;
+    int mid = 0;
+    for (int i = 0; i < 8001; i++) {
+        count += freq[i];
+        if (count > n / 2) {
+            mid = i - 4000;
+            break;
+        }
+    }
 
     // 3. 최빈값
-    int mode = arr[0];
     int max_freq = 0;
-    int found_second = 0;
-
-    for (int i = 0; i < n; ) {
-        int value = arr[i];
-        int count = 0;
-
-        while (i < n && arr[i] == value) {
-            count++;
-            i++;
+    for (int i = 0; i < 8001; i++) {
+        if (freq[i] > max_freq) {
+            max_freq = freq[i];
         }
+    }
 
-        if (count > max_freq) {
-            max_freq = count;
-            mode = value;
-            found_second = 0;
-        } else if (count == max_freq && found_second == 0) {
-            mode = value;
-            found_second = 1;
+    int mod = 0;
+    int found = 0;
+    for (int i = 0; i < 8001; i++) {
+        if (freq[i] == max_freq) {
+            mod = i - 4000;
+            found++;
+            if (found == 2) {
+                break;
+            }
         }
     }
 
     // 4. 범위
-    int range = arr[n - 1] - arr[0];
+    int range = max - min;
 
-    printf("%d\n", avg);
-    printf("%d\n", mid);
-    printf("%d\n", mode);
-    printf("%d\n", range);
+    printf("%d\n%d\n%d\n%d\n", avg, mid, mod, range);
 
-    free(arr);
     return 0;
 }
