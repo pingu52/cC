@@ -1,18 +1,23 @@
 #include <stdio.h>
 
+int gcd(int a, int b) {
+    while (b != 0) {
+        int temp = a % b;
+        a = b;
+        b = temp;
+    }
+    return a;
+}
+
 int main() {
     int a, b;
     scanf("%d %d", &a, &b);
 
-    int min = (a < b) ? a : b;
+    int g = gcd(a, b);
+    int l = a * b / g;
 
-    for (int i = min; i >= 1; i--) {
-        if (a % i == 0 && b % i == 0) {
-            printf("%d\n", i);
-            min = i;
-            break;
-        }
-    }
-    printf("%d\n", a * b / min);
+    printf("%d\n", g);
+    printf("%d\n", l);
+
     return 0;
 }
