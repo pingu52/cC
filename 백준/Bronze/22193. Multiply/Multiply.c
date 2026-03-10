@@ -1,38 +1,36 @@
 #include <stdio.h>
-#include <string.h>
 
-#define MAX 50005
+#define MAX 50001
+#define MAX_RES 100001
 
-char A[MAX], B[MAX];
-int result[100010];
+char a[MAX], b[MAX];
+int res[MAX_RES];
 
 int main(void) {
-    int N, M;
-    scanf("%d %d", &N, &M);
-    scanf("%s", A);
-    scanf("%s", B);
+    int n, m;
+    scanf("%d %d", &n, &m);
+    scanf("%s", a);
+    scanf("%s", b);
 
-    // 뒤에서부터 한 자리씩 곱셈
-    for (int i = N - 1; i >= 0; i--) {
-        for (int j = M - 1; j >= 0; j--) {
-            int mul = (A[i] - '0') * (B[j] - '0');
-            int p1 = i + j;
-            int p2 = i + j + 1;
-
-            int sum = mul + result[p2];
-            result[p2] = sum % 10;
-            result[p1] += sum / 10;
+    for (int i = n - 1; i >= 0; i--) {
+        int da = a[i] - '0';
+        for (int j = m - 1; j >= 0; j--) {
+            res[i + j + 1] += da * (b[j] - '0');
         }
     }
 
-    // 앞쪽 0 건너뛰기
+    for (int i = n + m - 1; i > 0; i--) {
+        res[i - 1] += res[i] / 10;
+        res[i] %= 10;
+    }
+
     int start = 0;
-    while (start < N + M - 1 && result[start] == 0) {
+    while (start < n + m - 1 && res[start] == 0) {
         start++;
     }
 
-    for (int i = start; i < N + M; i++) {
-        printf("%d", result[i]);
+    for (int i = start; i < n + m; i++) {
+        printf("%d", res[i]);
     }
     printf("\n");
 
