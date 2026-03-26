@@ -1,11 +1,21 @@
 #include <stdio.h>
 #include <string.h>
 
+int get_bit(int x) { return 1 << (x - 1); }
+
+void add_bit(int *s, int x) { *s |= get_bit(x); }
+
+void remove_bit(int *s, int x) { *s &= ~get_bit(x); }
+
+int check_bit(int s, int x) { return (s & get_bit(x)) ? 1 : 0; }
+
+void toggle_bit(int *s, int x) { *s ^= get_bit(x); }
+
 int main() {
     int m;
     scanf("%d", &m);
 
-    int s[21] = {0};
+    int s = 0;
     char str[10];
     int x;
 
@@ -14,22 +24,20 @@ int main() {
 
         if (strcmp(str, "add") == 0) {
             scanf("%d", &x);
-            s[x] = 1;
+            add_bit(&s, x);
         } else if (strcmp(str, "remove") == 0) {
             scanf("%d", &x);
-            s[x] = 0;
+            remove_bit(&s, x);
         } else if (strcmp(str, "check") == 0) {
             scanf("%d", &x);
-            printf("%d\n", s[x]);
+            printf("%d\n", check_bit(s, x));
         } else if (strcmp(str, "toggle") == 0) {
             scanf("%d", &x);
-            s[x] = !s[x];
+            toggle_bit(&s, x);
         } else if (strcmp(str, "all") == 0) {
-            for (int i = 1; i <= 20; i++) {
-                s[i] = 1;
-            }
+            s = (1 << 20) - 1;
         } else if (strcmp(str, "empty") == 0) {
-            memset(s, 0, sizeof(s));
+            s = 0;
         }
     }
 
